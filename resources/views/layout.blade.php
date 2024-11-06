@@ -57,9 +57,10 @@
                         </li> 
         
         <li class="dropdown"><a href="#"><i class="fa fa-industry"></i> Thương hiệu <i class="fa fa-angle-down"></i></a>
-            <ul class="sub-menu">
-                <li><a href="blog.html">PANASONIC</a></li>
-                <li><a href="blog-single.html">MITSUBISHI</a></li>
+                            <ul class="sub-menu">
+                                @foreach($brand as $brand_item)
+                            <li><a href="{{ URL::to('/thuong-hieu-san-pham/' . $brand_item->brand_id) }}">{{ $brand_item->brand_name }}</a></li>
+                            @endforeach
             </ul>
         </li>
         
