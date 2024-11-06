@@ -23,7 +23,7 @@
             <th>Mã đơn hàng</th>
             <th>Ngày đặt hàng</th>
             <th>Tình trạng đơn hàng</th>
-            
+            <th>Lý do hủy đơn</th>
             <th style="width:30px;"></th>
           </tr>
         </thead>
@@ -40,17 +40,28 @@
             <td>{{ $ord->order_code }}</td>
             <td>{{ $ord->created_at }}</td>
             <td>@if( $ord->order_status == 1 )
-                    Đơn hàng mới
+                    <span class="text text-success">Đơn hàng mới</span>
+                @elseif( $ord->order_status == 4 )
+                    <span class="text text-primary">Đang giao hàng</span>
+                @elseif( $ord->order_status == 2 )
+                    <span class="text text-primary">Đã giao hàng</span>  
+                @elseif( $ord->order_status == 5 )
+                    <span class="text text-primary">Giao hàng thành công</span>                 
                 @else
-                    Đã xử lý
+                    <span class="text text-danger">Đơn hàng đã bị hủy</span>
                 @endif
-            </td>
 
+            </td>
+            <td>
+              @if($ord->order_status == 3)
+              {{ $ord->order_destroy }}
+              @endif
+            </td>
             <td>
               <a href="{{URL::to('/view-order/' . $ord->order_code)}}" class="active" ui-toggle-class="">
                 <i class="fa fa-eye text-success text-active"></i></a>
 
-               <a onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này không?')" href="{{URL::to('/delete-order/' . $ord->order_code)}}" class="active" ui-toggle-class=""> 
+               <a onclick="return confirm('Bạn có chắc chắn muốn xóa đơn hàng này không?')" href="{{URL::to('/delete-order/' . $ord->order_code)}}" class="active" ui-toggle-class=""> 
                 <i class="fa fa-times text-danger text"></i>
               </a>  
             </td>

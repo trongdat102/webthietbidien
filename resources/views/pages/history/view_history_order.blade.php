@@ -1,9 +1,9 @@
-@extends('admin_layout')
-@section('admin_content')       
+@extends('layout')
+@section('content')       
 <div class="table-agile-info">
   <div class="panel panel-default">
     <div class="panel-heading">
-       Thông tin khách hàng
+       Chi tiết đơn hàng
     </div>
     <div class="table-responsive">
                         <?php
@@ -38,7 +38,7 @@
 <div class="table-agile-info">
   <div class="panel panel-default">
     <div class="panel-heading">
-       Thông tin vận chuyển
+       Thông tin chi tiết đơn hàng
     </div>
     <div class="table-responsive">
                         <?php
@@ -81,7 +81,7 @@
 <div class="table-agile-info">
   <div class="panel panel-default">
     <div class="panel-heading">
-       Liệt kê chi tiết đơn hàng
+       Chi tiết sản phẩm
     </div>
 
     <div class="table-responsive">
@@ -97,7 +97,6 @@
           <tr>
             <th style="width:20px;">Thứ tự</th>
             <th>Tên sản phẩm</th>
-            <th>Số lượng kho còn</th>
             <th>Số lượng</th>
             <th>Giá sản phẩm</th>
             <th>Tổng tiền</th>
@@ -120,17 +119,14 @@
 
             <td><i>{{$i}}</i></td>
             <td>{{$details->product_name}}</td>
-            <td>{{$details->product->product_quantity}}</td>
+            
             <td>
-              <input type="number" {{$order_status == 2 ? 'disabled' : ''}} class="order_qty_{{$details->product_id}}" min="1" value="{{$details->product_sales_quantity}}" name="product_sales_quantity">
+              <input type="number" readonly {{$order_status == 2 ? 'disabled' : ''}} class="order_qty_{{$details->product_id}}" min="1" value="{{$details->product_sales_quantity}}" name="product_sales_quantity">
               <input type="hidden" name="order_qty_storage" class="order_qty_storage_{{$details->product_id}}" value="{{$details->product->product_quantity}}">
               <input type="hidden" name="order_code" class="order_code" value="{{$details->order_code}}">
               <input type="hidden" name="order_product_id" class="order_product_id" value="{{$details->product_id}}">
 
-              @if($order_status != 2)
 
-              <button class="btn btn-default update_quantity_order" data-product_id ="{{$details->product_id}}" name="update_quantity_order">Cập nhật</button>
-              @endif
             </td>
             <td>{{number_format($details->product_price , 0, ',', '.')}}₫</td>
             <td>{{number_format($subtotal , 0, ',', '.')}}₫</td>
@@ -138,61 +134,6 @@
          @endforeach
             <tr>
               <td>Thanh toán: {{number_format($total , 0, ',', '.')}}₫</td>
-            </tr>
-            <tr>
-              <td colspan="6">
-                @foreach($order as $key => $or)
-                @if($or->order_status == 1)
-                <form>
-                  @csrf
-                    <select class="form-control order_details">
-                      <option id="{{$or->order_id}}" selected value="1">Chưa xử lý </option>
-                      <option id="{{$or->order_id}}" value="4">Đang giao hàng </option>
-                      <option id="{{$or->order_id}}" value="2">Đã giao hàng </option>
-                    </select>
-                </form>
-                @elseif($or->order_status == 4)
-                <form>
-                  @csrf
-                    <select class="form-control order_details">
-                      <option id="{{$or->order_id}}" value="1">Chưa xử lý </option>
-                      <option id="{{$or->order_id}}" selected value="4">Đang giao hàng </option>
-                      <option id="{{$or->order_id}}" value="2">Đã giao hàng </option>
-                    </select>
-                </form>
-                @elseif($or->order_status == 2)
-                <form>
-                  @csrf
-                    <select class="form-control order_details">
-                      <option disabled id="{{$or->order_id}}" value="1">Chưa xử lý </option>
-                      <option disabled id="{{$or->order_id}}" value="4">Đang giao hàng </option>
-                      <option id="{{$or->order_id}}" selected value="2">Đã giao hàng </option>
-                      <option id="{{$or->order_id}}" value="5">Giao hàng thành công</option>
-                    </select>
-                </form>
-                @elseif($or->order_status == 5)
-                <form>
-                  @csrf
-                    <select class="form-control order_details">
-                      <option disabled id="{{$or->order_id}}" value="1">Chưa xử lý </option>
-                      <option disabled id="{{$or->order_id}}" value="4">Đang giao hàng </option>
-                      <option disabled id="{{$or->order_id}}" value="2">Đã giao hàng </option>
-                      <option id="{{$or->order_id}}" selected value="5">Giao hàng thành công</option>
-                    </select>
-                </form>
-                @else
-                <form>
-                  @csrf
-                    <select class="form-control order_details">
-                      <option disabled id="{{$or->order_id}}" value="1">Chưa xử lý </option>
-                      <option disabled id="{{$or->order_id}}" value="2">Đã giao hàng </option>
-                      <option disabled id="{{$or->order_id}}" value="5">Giao hàng thành công</option>
-                      <option id="{{$or->order_id}}" selected value="3">Đơn hàng bị hủy </option>
-                    </select>
-                </form>
-                @endif
-                @endforeach
-              </td>
             </tr>
         </tbody>
       </table>

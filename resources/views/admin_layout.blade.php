@@ -23,8 +23,13 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <!-- //calendar -->
 <!-- //font-awesome icons -->
 <script src="{{asset('public/backend/js/jquery2.0.3.min.js')}}"></script>
-<script src="{{asset('public/backend/js/raphael-min.js')}}"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
 <script src="{{asset('public/backend/js/morris.js')}}"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
 </head>
 <body>
 <section id="container">
@@ -32,7 +37,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <header class="header fixed-top clearfix">
 <!--logo start-->
 <div class="brand">
-    <a href="index.html" class="logo">
+    <a href="{{URL::asset('/dashboard')}}" class="logo">
         ADMIN
     </a>
     <div class="sidebar-toggle-box">
@@ -84,17 +89,17 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                 <li>
                     <a class="active" href="{{URL::asset('/dashboard')}}">
                         <i class="fa fa-dashboard"></i>
-                        <span>Tổng quan</span>
+                        <span>Báo cáo thống kê</span>
                     </a>
                 </li>
                 
                 <li class="sub-menu">
                     <a href="javascript:;">
                         <i class="fa fa-book"></i>
-                        <span>Báo cáo thống kê</span>
+                        <span>Quản lý đơn hàng</span>
                     </a>
                     <ul class="sub">
-                        <li><a href="{{ url('/manage-order') }}">Quản lý đơn hàng</a></li>
+                        <li><a href="{{ url('/manage-order') }}">Đơn hàng</a></li>
                        
                     </ul>
                 </li>
@@ -199,7 +204,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
  <!-- footer -->
 		  <div class="footer">
 			<div class="wthree-copyright">
-			  <p>© 2017 Visitors. All rights reserved | Design by <a href="http://w3layouts.com">W3layouts</a></p>
+			  <p>© 2024 VMU | Design by <a href="https://www.facebook.com/trongdat.ng">Trong Dat</a></p>
 			</div>
 		  </div>
   <!-- / footer -->
@@ -214,34 +219,146 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="js/flot-chart/excanvas.min.js"></script><![endif]-->
 <script src="{{asset('js/jquery.scrollTo.js')}}"></script>
 <script src="{{asset('public/frontend/js/sweetalert.js')}}"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <!-- morris JavaScript -->	
-<script type="text/javascript"> 
-    $('.order_details').change(function(){
-        var order_status = $(this).val();
-        var order_id = $(this).children(":selected").attr("id");
-        var _token = $('input[name = "_token"]').val();
-        //Lấy số lượng
-        quantity = [];
-        $("input[name = 'product_sales_quantity']").each(function(){
-            quantity.push($(this).val());
+<script type="text/javascript">
+    $(document).ready(function() {
+        // Khai báo biến chart bên ngoài để có thể truy cập từ nhiều hàm
+        var chart = new Morris.Bar({
+            element: 'myfirstchart',
+            lineColors: ['#819C79', '#fc8710', '#FF6541', '#A4ADD3', '#766B56'],
+            parseTime: false,
+            hideHover: 'auto',
+            xkey: 'period',
+            ykeys: ['order', 'sales', 'quantity'],
+            labels: ['Đơn hàng', 'Doanh số','Số lượng'],
+            behaveLikeLine: true
         });
-        //Lấy product_id
-        order_product_id = [];
-        $("input[name = 'order_product_id']").each(function(){
-            order_product_id.push($(this).val());
+
+        $('#btn-dashboard-filter').click(function() {
+            var _token = $('input[name="_token"]').val();
+            var from_date = $('#datepicker').val(); 
+            var to_date = $('#datepicker2').val(); 
+
+            $.ajax({
+                url: '{{url('/filter-by-date')}}', 
+                method: 'post', 
+                dataType: "JSON",
+                data: {
+                    from_date: from_date, 
+                    to_date: to_date, 
+                    _token: _token
+                }, 
+                success: function(data) {
+                    // Kiểm tra định dạng dữ liệu nhận được
+                    if (data && Array.isArray(data)) {
+                        chart.setData(data);
+                    } else {
+                        console.error('Dữ liệu không hợp lệ:', data);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Có lỗi xảy ra:', error);
+                }
+            });
+        });
     });
+</script>
+
+
+<script type="text/javascript">
+    $( function() {
+    $( "#datepicker" ).datepicker({
+        prevText: "Tháng trước",
+        nextText: "Tháng sau",
+        dateFormat: "yy-mm-dd",
+        dayNamesMin: [ "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ nhật" ],
+        duration: "slow",
+    });
+  } );
+
+    $( function() {
+    $( "#datepicker2" ).datepicker({
+        prevText: "Tháng trước",
+        nextText: "Tháng sau",
+        dateFormat: "yy-mm-dd",
+        dayNamesMin: [ "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ nhật" ],
+        duration: "slow",
+    });
+  } );
+</script>
+<script type="text/javascript">
+    $('.update_quantity_order').click(function(){
+        var order_product_id = $(this).data('product_id');
+        var order_qty = $('.order_qty_' + order_product_id).val();
+        var order_code = $('.order_code').val();
+        var _token = $('input[name = "_token"]').val();
         $.ajax({
-                    url: '{{url('/update-order-qty')}}', 
+                    url: '{{url('/update-qty')}}', 
                     method: 'post', 
-                    data:{order_status:order_status, quantity:quantity, order_product_id:order_product_id, _token:_token, order_id:order_id}, 
+                    data:{order_product_id:order_product_id, order_qty:order_qty, order_code:order_code, _token:_token}, 
                     success:function(data){
                         // swal("Đơn hàng", "Đặt hàng thành công", "success");
                         alert('Cập nhật số lượng thành công');
                         location.reload();
                     }
                     });
-});
+        
+    });
 </script>
+<script type="text/javascript">
+    $('.order_details').change(function(){
+        var order_status = $(this).val();
+        var order_id = $(this).children(":selected").attr("id");
+        var _token = $('input[name="_token"]').val();
+
+        // Lấy số lượng
+        var quantity = [];
+        $("input[name='product_sales_quantity']").each(function(){
+            quantity.push($(this).val());
+        });
+
+        // Lấy product_id
+        var order_product_id = [];
+        $("input[name='order_product_id']").each(function(){
+            order_product_id.push($(this).val());
+        });
+
+        // Kiểm tra số lượng tồn kho
+        for (var i = 0; i < order_product_id.length; i++) {
+            var order_qty = $('.order_qty_' + order_product_id[i]).val();
+            var order_qty_storage = $('.order_qty_storage_' + order_product_id[i]).val();
+
+            if (parseInt(order_qty) > parseInt(order_qty_storage)) {
+                alert('Số lượng trong kho không đủ');
+                $('.color_qty_' + order_product_id[i]).css('background', '#000');
+                return; // Dừng lại nếu gặp lỗi về số lượng tồn kho
+            }
+        }
+
+        // Nếu mọi thứ đều ổn, gửi yêu cầu Ajax
+        $.ajax({
+            url: '{{ url('/update-order-qty') }}',
+            method: 'POST',
+            data: {
+                order_status: order_status,
+                quantity: quantity,
+                order_product_id: order_product_id,
+                _token: _token,
+                order_id: order_id
+            },
+            success: function(data) {
+                alert('Cập nhật tình trạng đơn hàng thành công');
+                location.reload();
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+                alert('Có lỗi xảy ra khi cập nhật đơn hàng');
+            }
+        });
+    });
+</script>
+
 <script>
 	$(document).ready(function() {
 		//BOX BUTTON SHOW AND CLOSE

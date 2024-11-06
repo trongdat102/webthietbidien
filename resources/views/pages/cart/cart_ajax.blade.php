@@ -9,16 +9,17 @@
             </ol>
         </div>
         @if(session()->has('message'))
-        		<div class="alert alert-success"> 
-        				{{ session() -> get('message') }}
-        		</div>
-        	@elseif(session()->has('error'))
-        		<div>
-        				{{ session() -> get('error') }}
-        		</div>
+            <div class="alert alert-success"> 
+                {!! session()->get('message') !!}
+            </div>
+        @elseif(session()->has('error'))
+            <div class="alert alert-danger">
+                {!! session()->get('error') !!}
+            </div>
         @endif
+
         <div class="row">
-            <div class="col-sm-12">
+            <div class="col-sm-9">
                 <div class="table-responsive cart_info">
                 <form action="{{URL('/update-cart')}}" method="post">
                 	@csrf
@@ -27,6 +28,7 @@
                             <tr class="cart_menu">
                                 <td class="image">Hình ảnh</td>
                                 <td class="description">Tên sản phẩm</td>
+                                <td class="description">Số lượng còn</td>
                                 <td class="price">Giá</td>
                                 <td class="quantity">Số lượng</td>
                                 <td class="total">Thành tiền</td>
@@ -49,6 +51,9 @@
                                 </td>
                                 <td class="cart_description">
                                     <h4 style="font-size: 10px;"><a href="">{{ $cart['product_name'] }}</a></h4>
+                                </td>
+                                <td class="cart_description">
+                                    <h4 style="font-size: 10px;"><a href="">{{ $cart['product_quantity'] }}</a></h4>
                                 </td>
                                 <td class="cart_price">
                                     <p>{{ number_format($cart['product_price'], 0, ',', '.') }}₫</p>
@@ -81,9 +86,9 @@
                                 @endif
                             </td>
 
-                            	<td colspan="2"><li>Tổng:<span>{{ number_format($total, 0, ',', '.') }}₫</span></li>
+                            	<td colspan="3"><li>Tổng:<span>{{ number_format($total, 0, ',', '.') }}₫</span></li>
                         			<li>Phí vận chuyển: <span>Free</span></li>
-                        			<li>Thành tiền: <span></span></li> 
+                        			<li>Thành tiền: <span>{{ number_format($total, 0, ',', '.') }}₫</span></li> 
                     			</td>
                             </tr>
                             @else

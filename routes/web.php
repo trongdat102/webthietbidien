@@ -26,8 +26,10 @@ Route::get('/chi-tiet-san-pham/{product_id}', [ProductController::class, 'detail
 //Backend
 Route::get('/admin', [AdminController::class, 'index']);
 Route::get('/dashboard', [AdminController::class, 'show_dashboard']);
+Route::post('/filter-by-date', [AdminController::class, 'filter_by_date']);
 Route::post('/admin-dashboard', [AdminController::class, 'dashboard']);
 Route::get('/logout', [AdminController::class, 'logout']);
+Route::get('/print-statistics-report/{from_date}/{to_date}', [AdminController::class, 'printStatisticsReportByDate']);
 
 //Category Product
 Route::get('/add-category-product', [CategoryProduct::class, 'add_category_product']);
@@ -102,9 +104,15 @@ Route::post('/confirm-order', [CheckoutController::class, 'confirm_order']);
 
 
 //Order 
-
+Route::get('/view-history-order/{order_code}', [OrderController::class, 'view_history_order']);
+Route::get('/history', [OrderController::class, 'history']);
 Route::get('/print-order/{checkout_code}', [OrderController::class, 'print_order']);
+Route::get('/delete-order/{order_code}', [OrderController::class, 'order_code']);
 Route::get('/manage-order', [OrderController::class, 'manage_order']);
-// Route::get('/manage-order', [CheckoutController::class, 'manage_order']);
 Route::get('/view-order/{order_code}', [OrderController::class, 'view_order']);
 Route::post('/update-order-qty', [OrderController::class, 'update_order_qty']);
+Route::post('/update-qty', [OrderController::class, 'update_qty']);
+Route::post('/huy-don-hang', [OrderController::class, 'huy_don_hang']);
+Route::get('/order/received/{order_code}', [OrderController::class, 'markAsReceived']);
+
+
