@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Redirect;
 session_start();
 use Carbon\Carbon;
 use App\Models\Statistic;
+use PhpOffice\PhpWord\TemplateProcessor;
+use PhpOffice\PhpWord\Shared\ZipArchive;
 
 class AdminController extends Controller
 {
@@ -21,6 +23,7 @@ class AdminController extends Controller
         return Redirect::to('admin')->send(); 
     }
 }
+    
     public function filter_by_date(Request $request) {
     $data = $request->all();
     $from_date = $data['from_date'];
@@ -44,6 +47,60 @@ class AdminController extends Controller
 
     return response()->json($chart_data); 
 }
+
+public function insertStatisticsToWord($from_date, $to_date)
+{
+    // Lấy dữ liệu thống kê từ database
+    $statistics = Statistic::whereBetween('order_date', [$from_date, $to_date])
+                           ->orderBy('order_date', 'ASC')
+                           ->get();
+    
+    $templatePath = storage_path('app/templates/thong_ke.docx');
+    $templateProcessor = new TemplateProcessor($templatePath);
+
+    // Điền thông tin từ ngày và đến ngày vào Word template
+    $templateProcessor->setValue('from_date', $from_date);
+    $templateProcessor->setValue('to_date', $to_date);
+
+    // Khởi tạo các biến tổng
+    $tableData = [];
+    $totalOrders = 0;
+    $totalQuantity = 0;
+    $totalSales = 0;
+
+    // Duyệt qua từng bản ghi để lấy dữ liệu và tính toán tổng
+    foreach ($statistics as $stat) {
+        $tableData[] = [
+            'order_date' => \Carbon\Carbon::parse($stat->order_date)->format('d/m/Y'),
+            'quantity' => $stat->quantity,
+            'total_order' => $stat->total_order,
+            'total_sales' => number_format($stat->sales, 0, ',', '.') . ' đ',
+        ];
+
+        // Tính tổng sau mỗi vòng lặp
+        $totalOrders += $stat->total_order;
+        $totalQuantity += $stat->quantity;
+        $totalSales += $stat->sales;
+    }
+
+    // Clone bảng và điền dữ liệu vào Word
+    $templateProcessor->cloneRowAndSetValues('order_date', $tableData);
+
+    // Điền thêm tổng cộng vào Word
+    $templateProcessor->setValue('total_order', $totalOrders);
+    $templateProcessor->setValue('quantity', $totalQuantity);
+    $templateProcessor->setValue('sales', number_format($totalSales, 0, ',', '.') . ' đ');
+
+    // Lưu file Word
+    $fileName = 'thong_ke_tu_ngay_' . $from_date . '_den_ngay_' . $to_date . '.docx';
+    $filePath = storage_path('app/templates/' . $fileName);
+
+    $templateProcessor->saveAs($filePath);
+
+    // Trả file về cho người dùng
+    return response()->download($filePath)->deleteFileAfterSend(true);
+}
+
 
    public function printStatisticsReportByDate($from_date, $to_date)
 {
@@ -176,4 +233,35 @@ class AdminController extends Controller
         Session::put('admin_id',null);
         return Redirect::to('/admin');
     }
+    public function registerAdmin(){
+        
+        return view('admin.add_admin');
+    }
+    public function add_admin(Request $request) {
+    // Lấy dữ liệu từ form
+    $admin_name = $request->admin_name;
+    $admin_email = $request->admin_email;
+    $admin_password = md5($request->admin_password);
+    $admin_phone = $request->admin_phone;
+
+    // Kiểm tra email có tồn tại chưa
+    $existingAdmin = DB::table('tbl_admin')->where('admin_email', $admin_email)->first();
+    if ($existingAdmin) {
+        // Email đã tồn tại
+        Session::put('message', 'Email này đã được đăng ký. Vui lòng thử email khác.');
+        return Redirect::to('/admin-register'); // Trả về trang đăng ký
+    }
+
+    // Lưu tài khoản mới vào cơ sở dữ liệu
+    DB::table('tbl_admin')->insert([
+        'admin_name' => $admin_name,
+        'admin_email' => $admin_email,
+        'admin_password' => $admin_password,
+        'admin_phone' => $admin_phone
+    ]);
+
+    // Đăng ký thành công
+    Session::put('message', 'Đăng ký thành công. Bạn có thể đăng nhập.');
+    return Redirect::to('/admin');
+}
 }

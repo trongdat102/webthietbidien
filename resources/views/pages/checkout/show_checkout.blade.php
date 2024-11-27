@@ -4,13 +4,12 @@
 		<div class="container">
 			<div class="breadcrumbs">
 				<ol class="breadcrumb">
-				  <li><a href="{{URL::to('/')}}">Trang chủ</a></li>
-				  <li class="active">Thanh toán giỏ hàng</li>
+				  <li><a class="active">Thanh toán giỏ hàng</a></li>
 				</ol>
 			</div>
-			<!-- <div class="register-req">
+			{{-- <div class="register-req">
 				<p>Đăng kí hoặc đăng nhập để thanh toán giỏ hàng và xem lại lịch sử mua hàng</p>
-			</div> -->
+			</div> --}}
 
 			<div class="shopper-informations">
 				<div class="row">
@@ -21,19 +20,21 @@
 							<form method="post">
 									@csrf
 								<input type="text" name="shipping_email" class="shipping_email" placeholder="Email*">
-								<input type="text" name="shipping_name" class="shipping_name" placeholder="Họ và tên">
-								<input type="text" name="shipping_address" class="shipping_address" placeholder="Địa chỉ">
-								<input type="text" name="shipping_phone" class="shipping_phone" placeholder="Số điện thoại">
-								<textarea name="shipping_notes" class="shipping_notes"  placeholder="Ghi chú đơn hàng của bạn" rows="5"></textarea>
+								<input type="text" name="shipping_name" class="shipping_name" placeholder="Họ và tên*">
+								<input type="text" name="shipping_address" class="shipping_address" placeholder="Địa chỉ*">
+								<input type="text" name="shipping_phone" class="shipping_phone" placeholder="Số điện thoại*">
+								<textarea name="shipping_notes" class="shipping_notes"  placeholder="Ghi chú đơn hàng của bạn*" rows="5"></textarea>
 								
 								<div class="">
 									<div class="form-group">
-										<label for="exampleInputPassword1">Chọn hình thức thanh toán</label>
-										<select name="payment_select" class="form-control input-sm m-bot15 payment_select">
-												<option value="0">Chuyển khoản ngân hàng</option>
-												<option value="1">Tiền mặt</option>
-										</select>
+									    <label for="payment_select">Chọn hình thức thanh toán</label>
+									    <select name="payment_select" class="form-control input-sm m-bot15 payment_select">
+									        @foreach ($payment_methods as $payment)
+									            <option value="{{ $payment->payment_id }}">{{ $payment->payment_method }}</option>
+									        @endforeach
+									    </select>
 									</div>
+
 							    </div>
 							    <input type="button" value="Xác nhận đơn hàng" name="send_order" class="btn btn-primary btn-small send_order">
 							</form>
@@ -42,14 +43,14 @@
 					</div>
 					<div class="col-sm-12 clearfix">
 						 @if(session()->has('message'))
-			        		<div class="alert alert-success"> 
-			        				{{ session() -> get('message') }}
-			        		</div>
-			        	@elseif(session()->has('error'))
-			        		<div>
-			        				{{ session() -> get('error') }}
-			        		</div>
-			       		 @endif
+				            <div class="alert alert-success"> 
+				                {!! session()->get('message') !!}
+				            </div>
+				        @elseif(session()->has('error'))
+				            <div class="alert alert-danger">
+				                {!! session()->get('error') !!}
+				            </div>
+				        @endif
 						<div class="table-responsive cart_info">
                 <form action="{{URL('/update-cart')}}" method="post">
                 	@csrf
@@ -106,8 +107,8 @@
                             <td><a class="btn btn-default check_out" href="{{url('/del-all-product')}}">Xóa giỏ hàng</a>
                             </td>
                             <td>
-                        		<a class="btn btn-default check_out" href="">Thanh toán</a>
-                    			<a class="btn btn-default check_out" href="">Mã giảm giá</a>
+                        		{{-- <a class="btn btn-default check_out" href="">Thanh toán</a> --}}
+                    			{{-- <a class="btn btn-default check_out" href="">Mã giảm giá</a> --}}
                             </td>
                             	<td colspan="2"><li>Tổng:<span>{{ number_format($total, 0, ',', '.') }}₫</span></li>
                         			<li>Phí vận chuyển: <span>Free</span></li>

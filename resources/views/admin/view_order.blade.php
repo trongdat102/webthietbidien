@@ -69,7 +69,7 @@
             <td>{{$shipping->shipping_email}}</td>
             <td>{{$shipping->shipping_notes}}</td>
             <td>@if( $shipping->shipping_method == 0 ) Chuyển khoản 
-              @else Tiền mặt
+              @else Thanh toán khi nhận hàng
             @endif</td>
           </tr>  
         </tbody>
@@ -122,7 +122,7 @@
             <td>{{$details->product_name}}</td>
             <td>{{$details->product->product_quantity}}</td>
             <td>
-              <input type="number" {{$order_status == 2 ? 'disabled' : ''}} class="order_qty_{{$details->product_id}}" min="1" value="{{$details->product_sales_quantity}}" name="product_sales_quantity">
+              <input type="number" {{$order_status != 1 ? 'disabled' : ''}} class="order_qty_{{$details->product_id}}" min="1" value="{{$details->product_sales_quantity}}" name="product_sales_quantity">
               <input type="hidden" name="order_qty_storage" class="order_qty_storage_{{$details->product_id}}" value="{{$details->product->product_quantity}}">
               <input type="hidden" name="order_code" class="order_code" value="{{$details->order_code}}">
               <input type="hidden" name="order_product_id" class="order_product_id" value="{{$details->product_id}}">
@@ -167,7 +167,7 @@
                       <option disabled id="{{$or->order_id}}" value="1">Chưa xử lý </option>
                       <option disabled id="{{$or->order_id}}" value="4">Đang giao hàng </option>
                       <option id="{{$or->order_id}}" selected value="2">Đã giao hàng </option>
-                      <option id="{{$or->order_id}}" value="5">Giao hàng thành công</option>
+                      <option disabled id="{{$or->order_id}}" value="5">Giao hàng thành công</option>
                     </select>
                 </form>
                 @elseif($or->order_status == 5)
@@ -178,6 +178,17 @@
                       <option disabled id="{{$or->order_id}}" value="4">Đang giao hàng </option>
                       <option disabled id="{{$or->order_id}}" value="2">Đã giao hàng </option>
                       <option id="{{$or->order_id}}" selected value="5">Giao hàng thành công</option>
+                    </select>
+                </form>
+                @elseif($or->order_status == 6)
+                <form>
+                  @csrf
+                    <select class="form-control order_details">
+                      <option disabled id="{{$or->order_id}}" value="1">Chưa xử lý </option>
+                      <option disabled id="{{$or->order_id}}" value="4">Đang giao hàng </option>
+                      <option disabled id="{{$or->order_id}}" value="2">Đã giao hàng </option>
+                      <option disabled id="{{$or->order_id}}" value="5">Giao hàng thành công</option>
+                      <option id="{{$or->order_id}}" selected value="6">Đơn hàng bị trả lại</option>
                     </select>
                 </form>
                 @else
@@ -196,7 +207,10 @@
             </tr>
         </tbody>
       </table>
-      <a target="blank" href="{{url('/print-order/'.$details->order_code)}}">In đơn hàng </a>
+      <div class="col-md-4">
+    <a target="_blank" class="btn btn-success btn-sm" href="{{url('/print-order/'.$details->order_code)}}">In file PDF</a>
+    <a target="_blank" class="btn btn-success btn-sm" href="{{url('/export-invoice/'.$details->order_code)}}">Xuất file Word</a>
+  </div>
     </div>
   </div>
 </div>

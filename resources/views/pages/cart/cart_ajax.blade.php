@@ -85,11 +85,15 @@
                     			<a class="btn btn-default check_out" href="{{url('/login-checkout')}}">Thanh toán</a>
                                 @endif
                             </td>
-
-                            	<td colspan="3"><li>Tổng:<span>{{ number_format($total, 0, ',', '.') }}₫</span></li>
-                        			<li>Phí vận chuyển: <span>Free</span></li>
-                        			<li>Thành tiền: <span>{{ number_format($total, 0, ',', '.') }}₫</span></li> 
-                    			</td>
+                            	<tr>
+                                    <td colspan="3">
+                                        <ul class="cart_summary">
+                                            <li>Tổng: <span>{{ number_format($total, 0, ',', '.') }}₫</span></li>
+                                            <li>Phí vận chuyển: <span>Free</span></li>
+                                            <li>Thành tiền: <span>{{ number_format($total, 0, ',', '.') }}₫</span></li> 
+                                        </ul>
+                                    </td>
+                                </tr>
                             </tr>
                             @else
                             <tr><td colspan="5"> <center>

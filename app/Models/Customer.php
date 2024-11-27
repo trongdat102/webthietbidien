@@ -14,4 +14,10 @@ class Customer extends Model
     ];
     protected $primaryKey = 'customer_id';
     protected $table = 'tbl_customers';
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'customer_id');
+    }
 }
+

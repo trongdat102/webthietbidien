@@ -24,9 +24,10 @@
             <div id="myfirstchart" style="height: 400px;"></div>
         </div>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-4">
                 <input type="button" id="btn-dashboard-filter" class="btn btn-primary btn-sm" value="Lọc kết quả">
-                <a id="btn-print-pdf" class="btn btn-success btn-sm" target="_blank">In báo cáo</a>
+                <a id="btn-print-pdf" class="btn btn-success btn-sm" target="_blank">In báo cáo PDF</a>
+                <a id="btn-print-word" class="btn btn-success btn-sm" target="_blank">In file word</a>
             </div>
 </div>
 
@@ -37,6 +38,8 @@
         
         var baseUrl = "{{ url('/') }}";
         document.getElementById('btn-print-pdf').href = `${baseUrl}/print-statistics-report/${from_date}/${to_date}`;
+        var baseUrl = "{{ url('/') }}";
+        document.getElementById('btn-print-word').href = `${baseUrl}/export-statistics-word/${from_date}/${to_date}`;
     }
 </script>
 @endsection

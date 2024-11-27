@@ -48,9 +48,9 @@ class ProviderController extends Controller
         'provider_status' => $request->provider_product_status
     ];
 
-    DB::table('tbl_providers')->insert($data);
+    DB::table('tbl_provider_product')->insert($data);
     Session::put('message', 'Thêm nhà cung cấp thành công');
-    return Redirect::to('/them-nha-cung-cap');
+    return Redirect::to('/add-provider-product');
 }
 
     public function unactive_provider_product($provider_product_id)

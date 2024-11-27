@@ -63,7 +63,7 @@
 							<ul class="nav nav-tabs">
 								<li class="active"><a href="#details" data-toggle="tab">Thông số kỹ thuật</a></li>
 								<li><a href="#companyprofile" data-toggle="tab">Chi tiết sản phẩn</a></li>
-								<li><a href="#reviews" data-toggle="tab">Đánh giá</a></li>
+								{{-- <li><a href="#reviews" data-toggle="tab">Đánh giá</a></li> --}}
 							</ul>
 						</div>
 						<div class="tab-content">
@@ -75,7 +75,7 @@
 									<p>{!!$value->product_desc!!}</p>
 
 							</div>							 											
-							<div class="tab-pane fade" id="reviews" >
+							{{-- <div class="tab-pane fade" id="reviews" >
 								<div class="col-sm-12">
 									<ul>
 										<li><a href=""><i class="fa fa-user"></i>EUGEN</a></li>
@@ -97,7 +97,7 @@
 										</button>
 									</form>
 								</div>
-							</div>
+							</div> --}}
 							
 						</div>
 					</div><!--/category-tab-->
@@ -107,28 +107,28 @@
 
     <div id="recommended-item-carousel" class="carousel slide" data-ride="carousel">
         <div class="carousel-inner">
-            @foreach(array_chunk($relate->toArray(), 3) as $key => $items) <!-- Chia sản phẩm thành các nhóm 3 -->
-                <div class="item {{ $key == 0 ? 'active' : '' }}"> <!-- Chỉ định active cho item đầu tiên -->
-                    <div class="row"> <!-- Thêm thẻ <div class="row"> -->
-                        @foreach($items as $lienquan)    
-                            <div class="col-sm-4">
-                                <div class="product-image-wrapper">
-                                    <div class="single-products">
-                                        <div class="productinfo text-center">
-                                            <img src="{{ asset('public/uploads/product/' . $lienquan->product_image) }}" alt="" />
-                                            <h2>{{number_format($lienquan->product_price) .' đ' }}</h2>
-                                            <p>{{ $lienquan->product_name }}</p>
-                                            <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Thêm vào giỏ hàng</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div> <!-- Đóng thẻ <div class="row"> -->
-                </div> <!-- Đóng thẻ <div class="item"> -->
-            @endforeach
-        </div>
-
+					    @foreach($relate->chunk(3) as $key => $items) 
+					        <div class="item {{ $key == 0 ? 'active' : '' }}"> 
+					            <div class="row"> 
+					                @foreach($items as $lienquan)    
+					                    <div class="col-sm-4">
+					                        <div class="product-image-wrapper">
+					                            <div class="single-products">
+					                                <div class="productinfo text-center">
+					                                    <a href="{{ URL::to('/chi-tiet-san-pham/' . $lienquan->product_id) }}">
+					                                        <img src="{{ asset('public/uploads/product/' . $lienquan->product_image) }}" alt="" />
+					                                        <h2>{{ number_format($lienquan->product_price) . ' đ' }}</h2>
+					                                        <p>{{ $lienquan->product_name }}</p>
+					                                    </a> <!-- Đóng thẻ <a> -->
+					                                </div>
+					                            </div>
+					                        </div>
+					                    </div>
+					                @endforeach
+					            </div> <!-- Đóng thẻ <div class="row"> -->
+					        </div> <!-- Đóng thẻ <div class="item"> -->
+					    @endforeach
+					</div>
         <a class="left recommended-item-control" href="#recommended-item-carousel" data-slide="prev">
             <i class="fa fa-angle-left"></i>
         </a>

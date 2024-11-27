@@ -6,7 +6,20 @@
        Liệt kê đơn hàng
     </div>
     <div class="row w3-res-tb">
+        <div class="col-sm-6 m-b-xs">
+            <form action="{{ route('export.excel.orders') }}" method="POST">
+                @csrf
+                <label for="start_date">Từ ngày:</label>
+                <input type="date" name="start_date" required>
 
+                <label for="end_date">Đến ngày:</label>
+                <input type="date" name="end_date" required>
+
+                <input type="submit" value="Xuất báo cáo" class="btn btn-info">
+            </form>
+
+
+        </div>
     </div>
     <div class="table-responsive">
                         <?php
@@ -23,7 +36,7 @@
             <th>Mã đơn hàng</th>
             <th>Ngày đặt hàng</th>
             <th>Tình trạng đơn hàng</th>
-            <th>Lý do hủy đơn</th>
+            <th>Lý do hủy đơn/Trả hàng</th>
             <th style="width:30px;"></th>
           </tr>
         </thead>
@@ -46,14 +59,16 @@
                 @elseif( $ord->order_status == 2 )
                     <span class="text text-primary">Đã giao hàng</span>  
                 @elseif( $ord->order_status == 5 )
-                    <span class="text text-primary">Giao hàng thành công</span>                 
+                    <span class="text text-primary">Giao hàng thành công</span>   
+                @elseif( $ord->order_status == 6 )
+                    <span class="text text-danger">Đơn hàng bị trả lại</span>
                 @else
                     <span class="text text-danger">Đơn hàng đã bị hủy</span>
                 @endif
 
             </td>
             <td>
-              @if($ord->order_status == 3)
+              @if($ord->order_status == 3 || $ord->order_status == 6)
               {{ $ord->order_destroy }}
               @endif
             </td>

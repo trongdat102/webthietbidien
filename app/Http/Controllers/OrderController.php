@@ -13,6 +13,9 @@ use PDF;
 use DB;
 use Session;
 use App\Models\Statistic;
+use PhpOffice\PhpWord\TemplateProcessor;
+use PhpOffice\PhpWord\Shared\ZipArchive;
+
 
 class OrderController extends Controller
 {
@@ -37,6 +40,49 @@ class OrderController extends Controller
     if ($order) {
         $order->order_destroy = $data['lydo'];
         $order->order_status = 3; // Đánh dấu đơn hàng là đã bị hủy
+        $order->save();
+
+        // Trừ số liệu trong bảng Statistic
+        $order_date = $order->order_date;
+        $statistic = Statistic::where('order_date', $order_date)->first();
+
+        if ($statistic) {
+            $total_order = 1; 
+            $quantity = 0;
+            $sales = 0;
+
+            // Lấy chi tiết đơn hàng để cập nhật số lượng và doanh thu
+            $order_details = OrderDetails::where('order_code', $data['order_code'])->get();
+            foreach ($order_details as $detail) {
+                $product = Product::find($detail->product_id);
+
+                if ($product) {
+                    $qty = $detail->product_sales_quantity;
+                    $product->product_quantity += $qty; // Cộng lại số lượng sản phẩm vào kho
+                    $product->product_sold -= $qty;     // Trừ số lượng đã bán
+                    $product->save();
+
+                    $quantity += $qty;
+                    $sales += $detail->product_price * $qty;
+                }
+            }
+
+            // Trừ dữ liệu trong bảng Statistic
+            $statistic->sales -= $sales;
+            $statistic->quantity -= $quantity;
+            $statistic->total_order -= $total_order;
+            $statistic->save();
+        }
+    }
+}
+
+    public function tra_don_hang(Request $request) {
+    $data = $request->all();
+    $order = Order::where('order_code', $data['order_code'])->first();
+
+    if ($order) {
+        $order->order_destroy = $data['lydo'];
+        $order->order_status = 6; // Đánh dấu đơn hàng là đã bị hủy
         $order->save();
 
         // Trừ số liệu trong bảng Statistic
@@ -156,6 +202,59 @@ public function update_order_qty(Request $request) {
         }
     }
 }
+    public function exportInvoiceToWord($checkout_code)
+{
+    // Lấy thông tin chi tiết đơn hàng
+    $order_details = OrderDetails::where('order_code', $checkout_code)->get();
+    $order = Order::where('order_code', $checkout_code)->get();
+    foreach($order as $key => $ord){
+            $customer_id = $ord -> customer_id;
+            $shipping_id = $ord -> shipping_id;
+            
+        }
+    $customer = Customer::where('customer_id', $customer_id)->first();
+    $shipping = Shipping::where('shipping_id', $shipping_id)->first();
+
+    $order_details_product = OrderDetails::with('product')->where('order_code', $checkout_code)->get();
+
+    $templatePath = storage_path('app/templates/hoa_don.docx');
+    $templateProcessor = new TemplateProcessor($templatePath);
+
+    $templateProcessor->setValue('shipping_name', $shipping->shipping_name);
+    $templateProcessor->setValue('shipping_address', $shipping->shipping_address);
+    $templateProcessor->setValue('shipping_phone', $shipping->shipping_phone);
+    $templateProcessor->setValue('shipping_email', $shipping->shipping_email);
+    $templateProcessor->setValue('shipping_notes', $shipping->shipping_notes);
+    
+    $total = 0; // Khởi tạo tổng tiền
+    $templateProcessor->cloneRow('product_name', $order_details->count());
+
+    foreach ($order_details_product as $index => $product) {
+        $row = $index + 1;
+        $subtotal = $product->product_sales_quantity * $product->product_price;
+
+        $current_date = date('d/m/Y');
+        $templateProcessor->setValue('current_date', $current_date);
+        $templateProcessor->setValue('product_name#' . $row, $product->product_name);
+        $templateProcessor->setValue('product_sales_quantity#' . $row, $product->product_sales_quantity);
+        $templateProcessor->setValue('product_price#' . $row, number_format($product->product_price) . "VND");
+        $templateProcessor->setValue('subtotal#' . $row, number_format($subtotal) . "VND");
+
+        $total += $subtotal; // Cộng dồn tổng tiền
+    }
+
+    // Điền tổng tiền vào template
+    $templateProcessor->setValue('total', number_format($total, 0, ',', '.') . ' VND');
+
+    // Tạo đường dẫn file đầu ra
+    $outputPath = storage_path('app/templates/hoa_don_khach_hang_' . $checkout_code . '.docx');
+    $templateProcessor->saveAs($outputPath);
+
+    // Trả file về để tải xuống
+    return response()->download($outputPath)->deleteFileAfterSend(true);
+}
+
+
 
     public function print_order($checkout_code){
         $pdf = \App::make('dompdf.wrapper');
@@ -176,6 +275,7 @@ public function update_order_qty(Request $request) {
             $shipping = Shipping::where('shipping_id', $shipping_id)->first();
 
             $order_details_product = OrderDetails::with('product')->where('order_code', $checkout_code)->get();
+            $current_date = date('d/m/Y');
             $output = '';
 
            $output = <<<HTML
@@ -202,8 +302,7 @@ public function update_order_qty(Request $request) {
     <body>
         <div class='invoice-box'>
             <div class='title'>Hóa Đơn Bán Hàng</div>
-            <p>Mã đơn hàng: <strong>{$checkout_code}</strong></p>
-            <p>Ngày: <strong>" . date('d/m/Y') . "</strong></p>
+            <p>Ngày: <strong>{$current_date}</strong></p>
             <hr>
             <p><strong>Thông tin khách hàng</strong></p>
             <p>Họ tên: {$customer->customer_name}</p>

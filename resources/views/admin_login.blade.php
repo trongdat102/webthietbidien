@@ -36,12 +36,12 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			@csrf
 			<input type="text" class="ggg" name="admin_email" placeholder="Nhập email" required="">
 			<input type="password" class="ggg" name="admin_password" placeholder="Nhập mật khẩu" required="">
-			<span><input type="checkbox" />Nhớ đăng nhập</span>
-			<h6><a href="#">Quên mật khẩu?</a></h6>
+			{{-- <span><input type="checkbox" />Nhớ đăng nhập</span>
+			<h6><a href="#">Quên mật khẩu?</a></h6> --}}
 				<div class="clearfix"></div>
 				<input type="submit" value="Đăng nhập" name="login">
 		</form>
-		<p>Don't Have an Account ?<a href="registration.html">Create an account</a></p>
+		<p>Chưa có tài khoản ?<a href="{{ URL::to('/admin-register') }}">Tạo tài khoản</a></p>
 </div>
 </div>
 <script src="{{asset('public/backend/js/bootstrap.js')}}"></script>

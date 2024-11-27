@@ -15,6 +15,10 @@
     <link href="{{asset('public/frontend/css/responsive.css')}}" rel="stylesheet">
     <link href="{{asset('public/frontend/css/style.css')}}" rel="stylesheet">
     <link href="{{asset('public/frontend/css/sweetalert.css')}}" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" crossorigin href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&amp;family=Bricolage&#x2B;Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700&amp;family=Material&#x2B;Symbols&#x2B;Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&amp;display=swap&amp;family=Space&#x2B;Grotesk:wght@400;500;700&amp;display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!--[if lt IE 9]>
     <script src="js/html5shiv.js"></script>
     <script src="js/respond.min.js"></script>
@@ -68,7 +72,7 @@
         
         <li class="dropdown"><a href="#"><i class="fa fa-user"></i> Cá nhân <i class="fa fa-angle-down"></i></a>
     <ul class="sub-menu">
-        <li><a href="wishlish.html"><i class="fa fa-heart"></i> Bảo hành</a></li>
+        {{-- <li><a href="wishlish.html"><i class="fa fa-heart"></i> Bảo hành</a></li> --}}
         <?php
             $customer_id = Session::get('customer_id');
             $shipping_id = Session::get('shipping_id');
@@ -82,7 +86,7 @@
         <?php 
             } else { 
         ?>
-            <li><a href="{{ URL::to('/login-checkout') }}"><i class="fa fa-crosshairs"></i> Thanh toán</a></li>
+            {{-- <li><a href="{{ URL::to('/login-checkout') }}"><i class="fa fa-crosshairs"></i> Thanh toán</a></li> --}}
         <?php } ?>
         
         <li><a href="{{ URL::to('/gio-hang') }}"><i class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>
@@ -214,9 +218,6 @@
                 </div>
             </div>
         </div>
-    </section>
-    
-    <footer id="footer"><!--Footer-->
         <div class="footer-top" style="background-color: #ffffff;">
     <div class="container text-center">
         <div class="row justify-content-center">
@@ -231,80 +232,118 @@
         </div>
     </div>
 </div>
-
-        <div class="footer-widget" style="background: linear-gradient(to right, #5468ff, #87CEEB);">
+        
+    </section>
+    
+    <footer id="footer"><!--Footer-->
+        <div class="order-area box-shadow1 ptb-30 bb bg-fff" >
             <div class="container">
-                <div class="row">
-                    <div class="col-sm-2">
-                        <div class="single-widget">
-                            <h2>Service</h2>
-                            <ul class="nav nav-pills nav-stacked">
-                                <li><a href="#">Online Help</a></li>
-                                <li><a href="#">Contact Us</a></li>
-                                <li><a href="#">Order Status</a></li>
-                                <li><a href="#">Change Location</a></li>
-                                <li><a href="#">FAQ’s</a></li>
-                            </ul>
+                <div class="row g-4">
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="single-order c-fff home3-bg p-20">
+                            <div class="order-icon">
+                                <span class="fa fa-plane"></span>
+                            </div>
+                            <div class="order-content">
+                                <h5>Miễn phí vận chuyển</h5>
+                                <span>Cho tất cả các đơn hàng</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-sm-2">
-                        <div class="single-widget">
-                            <h2>Quock Shop</h2>
-                            <ul class="nav nav-pills nav-stacked">
-                                <li><a href="#">T-Shirt</a></li>
-                                <li><a href="#">Mens</a></li>
-                                <li><a href="#">Womens</a></li>
-                                <li><a href="#">Gift Cards</a></li>
-                                <li><a href="#">Shoes</a></li>
-                            </ul>
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="single-order c-fff home3-bg p-20">
+                            <div class="order-icon">
+                                <span class="fa fa-refresh"></span>
+                            </div>
+                            <div class="order-content">
+                                <h5>Trả hàng trong 7 ngày</h5>
+                                <span>Đảm bảo hoàn tiền</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-sm-2">
-                        <div class="single-widget">
-                            <h2>Policies</h2>
-                            <ul class="nav nav-pills nav-stacked">
-                                <li><a href="#">Terms of Use</a></li>
-                                <li><a href="#">Privecy Policy</a></li>
-                                <li><a href="#">Refund Policy</a></li>
-                                <li><a href="#">Billing System</a></li>
-                                <li><a href="#">Ticket System</a></li>
-                            </ul>
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="single-order c-fff home3-bg p-20">
+                            <div class="order-icon">
+                                <span class="fa fa-umbrella"></span>
+                            </div>
+                            <div class="order-content">
+                                <h5>Hỗ trợ 24/7</h5>
+                                <span>Hotline: 0931590032</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-sm-2">
-                        <div class="single-widget">
-                            <h2>About Shopper</h2>
-                            <ul class="nav nav-pills nav-stacked">
-                                <li><a href="#">Company Information</a></li>
-                                <li><a href="#">Careers</a></li>
-                                <li><a href="#">Store Location</a></li>
-                                <li><a href="#">Affillate Program</a></li>
-                                <li><a href="#">Copyright</a></li>
-                            </ul>
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="single-order c-fff home3-bg p-20">
+                            <div class="order-icon">
+                                <span class="fa fa-user"></span>
+                            </div>
+                            <div class="order-content">
+                                <h5>Hỗ trợ giảm giá</h5>
+                                <span>Giảm 10% cho thành viên</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-sm-3 col-sm-offset-1">
-                        <div class="single-widget">
-                            <h2>About Shopper</h2>
-                            <form action="#" class="searchform">
-                                <input type="text" placeholder="Your email address" />
-                                <button type="submit" class="btn btn-default"><i class="fa fa-arrow-circle-o-right"></i></button>
-                                <p>Get the most recent updates from <br />our site and be updated your self...</p>
-                            </form>
-                        </div>
-                    </div>
-                    
                 </div>
             </div>
         </div>
-        
-        <div class="footer-bottom" style="background: linear-gradient(to right, #5468ff, #87CEEB);">
+        <div class="social-items">
+                                <a href="https://www.facebook.com/sieuthidiennguphuc/" target="" class="fa-brands fa-facebook-f"></a>
+                                <a href="https://www.youtube.com/@sieuthidiennguphuc" target="" class="fa-brands fa-youtube"></a>
+                                <a href="https://www.tiktok.com/@sieuthidiennguphuc" target="" class="fa-brands fa-tiktok"></a>
+                                {{-- <a href="https://zalo.me/1628137845489591149" target=""> <img src="/public/frontend/images/zalo.svg" alt="" /></a> --}}
+                    </div>
+        <div class="footer-widget" style="background: linear-gradient(90deg, #004b7b 0, #0978be 50%, #49b9ff 100%);">
             <div class="container">
                 <div class="row">
-                    <p class="pull-left" style="">Copyright © 2024 VMU.</p>
-                    <p class="pull-right">Designed by <span><a target="_blank" href="https://www.facebook.com/trongdat.ng">Trong Dat</a></span></p>
+                    <div class="col-lg-4 col-item">
+                        <div class="single-widget">
+                            <h4>Trụ Sở Chính</h4>    
+                                <p class="address-p"><span class="fa-solid fa-location-dot"></span> Số 7/3B Lê Hồng Phong, Ngô Quyền, HP</p>
+                                    <p class="address-p notshowmobile"><span class="fa-solid fa-envelope"></span> Email: info@nguphuc.com.vn</p>
+                                    <p class="address-p notshowmobile"><span class="fa-solid fa-fax"></span> Fax: 0931 590 032</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-item">
+                        <div class="single-widget">
+                            <h4>THÉP NGŨ PHÚC</h4>    
+                                <p class="address-p"><span class="fa-solid fa-location-dot"></span> Số 348 đường Hà Nội, Hồng Bàng, Hải Phòng</p>
+                                <p class="address-p notshowmobile"><span class="fa-solid fa-envelope"></span> Email: nguphucsteel@gmail.com</p>
+                                    <p class="address-p notshowmobile"><span class="fa-solid fa-fax"></span> Fax: 0225.3538.707</p>                   
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-item">
+                        <div class="d-flex flex-column wrapper_button_footer">
+                            <a href="tel:0931590032" class="btn-link mb-3">
+                                <span class="me-3 fa-solid fa-phone"></span>
+                                HOTLINE: 0931 590 032
+                                <span class="fa-solid fa-arrow-up-right-from-square"></span>
+                            </a>
+                            <a href="mailto:pkd@nguphuc.com.vn" class="btn-link">
+                                <span class="me-3 fa-solid fa-paper-plane"></span>
+                                Liên hệ chúng tôi
+                                <span class="fa-solid fa-arrow-up-right-from-square"></span>
+                            </a>
+                        </div>
+                    </div>
+
                 </div>
             </div>
+        </div>
+        <div class="navigation-footer">
+                <ul class="nav">
+                        <li>
+                            <a href="https://www.nguphuc.com.vn/chinh-sach-bao-hanh-tt1394.html">Chính sách bảo hành</a>
+                        </li>
+                        <li>
+                            <a href="https://www.nguphuc.com.vn/chinh-sach-doi-tra-hang-hoa-tt1392.html">Chính sách đổi trả</a>
+                        </li>
+                        <li>
+                            <a href="https://www.nguphuc.com.vn/chinh-sach-bao-mat-thong-tin-tt1395.html">Chính sách bảo mật</a>
+                        </li>
+                </ul>
+            </div>
+        <div class="text-center">
+            <p class="copyright m-0 f-Manrope">Copyright © 2024 VMU. All right reserved.</p>
         </div>
         
     </footer><!--/Footer-->
@@ -321,47 +360,70 @@
     
 
     <script type="text/javascript">
-        $(document).ready(function(){
-            $('.send_order').click(function(){
-                swal({
-                  title: "Xác nhận đặt hàng?",
-                  text: "Vui lòng kiểm tra kĩ thông tin cá nhân",
-                  type: "warning",
-                  showCancelButton: true,
-                  confirmButtonClass: "btn-danger",
-                  confirmButtonText: "Xác nhận",
-                  cancelButtonText: "Hủy",
-                  closeOnConfirm: false,
-                  closeOnCancel: false
-                },
-                function(isConfirm){
+    $(document).ready(function(){
+        $('.send_order').click(function(){
+            // Kiểm tra các trường dữ liệu trước khi gửi yêu cầu
+            var shipping_email = $('.shipping_email').val();
+            var shipping_name = $('.shipping_name').val();
+            var shipping_address = $('.shipping_address').val();
+            var shipping_phone = $('.shipping_phone').val();
+            var shipping_notes = $('.shipping_notes').val() | "";
+            var shipping_method = $('.payment_select').val();
+
+            // Kiểm tra nếu có trường nào chưa được điền
+            if (!shipping_email || !shipping_name || !shipping_address || !shipping_phone || !shipping_method) {
+                swal("Lỗi", "Vui lòng điền đầy đủ thông tin trước khi xác nhận đơn hàng!", "error");
+                return false;  // Không tiếp tục nếu thiếu thông tin
+            }
+
+            // Nếu tất cả thông tin đã đầy đủ, hiển thị cảnh báo xác nhận
+            swal({
+                title: "Xác nhận đặt hàng?",
+                text: "Vui lòng kiểm tra kĩ thông tin cá nhân",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Xác nhận",
+                cancelButtonText: "Hủy",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            },
+            function(isConfirm){
                 if (isConfirm) {
-                var shipping_email = $('.shipping_email').val();
-                var shipping_name = $('.shipping_name').val();
-                var shipping_address = $('.shipping_address').val();
-                var shipping_phone = $('.shipping_phone').val();
-                var shipping_notes = $('.shipping_notes').val();
-                var shipping_method = $('.payment_select').val();
-                var _token = $('input[name="_token"]').val();
-                
-                $.ajax({
-                    url: '{{url('/confirm-order')}}', method: 'post', data:{shipping_email:shipping_email, shipping_name:shipping_name, shipping_address:shipping_address, shipping_phone:shipping_phone, shipping_notes:shipping_notes, _token:_token, shipping_method:shipping_method}, 
-                    success:function(data){
-                        swal("Đơn hàng", "Đặt hàng thành công", "success");
-                    }
+                    var _token = $('input[name="_token"]').val();
+                    
+                    $.ajax({
+                        url: '{{url('/confirm-order')}}', 
+                        method: 'post', 
+                        data: {
+                            shipping_email: shipping_email,
+                            shipping_name: shipping_name,
+                            shipping_address: shipping_address,
+                            shipping_phone: shipping_phone,
+                            shipping_notes: shipping_notes,
+                            _token: _token,
+                            shipping_method: shipping_method
+                        },
+                        success: function(data){
+                            swal("Đơn hàng", "Đặt hàng thành công", "success");
+                        },
+                        error: function() {
+                            swal("Lỗi", "Vui lòng thêm sản phẩm vào giỏ hàng", "error");
+                        }
                     });
-                window.setTimeout(function(){
-                    location.reload();
-                } ,3000);
+                    
+                    // Reload trang sau 3 giây
+                    window.setTimeout(function(){
+                        location.reload();
+                    }, 1000);
                 } else {
-                   swal("Đóng", "Đã hủy đơn hàng", "error"); 
+                    swal("Đóng", "Đã hủy đơn hàng", "error");
                 }
             });
-
         });
-        });
+    });
+</script>
 
-    </script>
     <script type="text/javascript">
         $(document).ready(function(){
             $('.add-to-cart').click(function(){
@@ -408,6 +470,20 @@
                     url: '{{url('/huy-don-hang')}}', method: 'post', data:{order_code:order_code,lydo:lydo,_token:_token}, 
                     success:function(data){
                         alert('Đơn hàng đã được hủy');
+                        location.reload();
+                    }
+        }) 
+        }
+    </script>
+    <script type="text/javascript">
+        function Tradonhang(id){
+            var order_code = id;
+            var lydo = $('.lydotrahang').val();
+            var _token = $('input[name="_token"]').val();
+            $.ajax({
+                    url: '{{url('/tra-don-hang')}}', method: 'post', data:{order_code:order_code,lydo:lydo,_token:_token}, 
+                    success:function(data){
+                        alert('Đơn hàng đã xác nhận trả');
                         location.reload();
                     }
         }) 

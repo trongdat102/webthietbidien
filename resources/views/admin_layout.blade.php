@@ -148,6 +148,43 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                         
                     </ul>
                 </li>
+                <li class="sub-menu">
+                    <a href="javascript:;">
+                        <i class="fa fa-book"></i>
+                        <span>Kho</span>
+                    </a>
+                    <ul class="sub">
+
+                        <li><a href="{{  url('/add-warehouse') }}">Thêm kho</a></li>
+                        <li><a href="{{  url('/all-warehouse') }}">Danh sách kho</a></li>
+                        <li><a href="{{ url('/add-warehouse-stock') }}">Thêm Hàng</a></li>
+                        <li><a href="{{ url('/warehouse-inventory') }}">Hàng Tồn Kho</a></li>
+
+                    </ul>
+
+                </li>
+                <li class="sub-menu">
+                    <a href="javascript:;">
+                        <i class="fa fa-book"></i>
+                        <span>Quản lý khách hàng</span>
+                    </a>
+                    <ul class="sub">
+                        <li><a href="{{  url('/all-customer') }}">Danh sách khách hàng</a></li>
+
+                    </ul>
+
+                </li>
+                <li class="sub-menu">
+                    <a href="javascript:;">
+                        <i class="fa fa-book"></i>
+                        <span>Quản lý phương thức thanh toán</span>
+                    </a>
+                    <ul class="sub">
+                        <li><a href="{{ url('/add-payment') }}">Thêm phương thức thanh toán</a></li>
+                        <li><a href="{{ url('/all-payment') }}">Danh sách phương thức thanh toán</a></li>
+                        
+                    </ul>
+                </li>
                 <!-- <li class="sub-menu">
                     <a href="javascript:;">
                         <i class="fa fa-book"></i>

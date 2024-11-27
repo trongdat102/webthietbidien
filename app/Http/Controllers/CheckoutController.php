@@ -16,6 +16,12 @@ class CheckoutController extends Controller
 {
     public function confirm_order(Request $request){
         $data = $request->all();
+        if (!Session::has('cart') || count(Session::get('cart')) == 0) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Giỏ hàng trống. Vui lòng thêm sản phẩm trước khi đặt hàng!'
+        ], 400); // Trả về lỗi với mã 400 (Bad Request)
+    }
         $shipping = new Shipping();
         $shipping -> shipping_name = $data['shipping_name'];
         $shipping -> shipping_address = $data['shipping_address'];
@@ -83,31 +89,60 @@ class CheckoutController extends Controller
         return view('pages.checkout.login_checkout')->with('category',$cate_product)->with('brand',$brand_product);
     }
     public function add_customer(Request $request) {
-    $data = array();
-    $data['customer_name'] = $request->customer_name;
-    $data['customer_phone'] = $request->customer_phone;
-    $data['customer_email'] = $request->customer_email;
-    $data['customer_password'] = md5($request->customer_password);
+    // Kiểm tra dữ liệu đầu vào
+    $validatedData = $request->validate([
+        'customer_name' => 'required',
+        'customer_email' => 'required|email|unique:tbl_customers,customer_email',
+        'customer_password' => 'required',
+        'customer_phone' => 'required',
+    ], [
+        'customer_name.required' => 'Vui lòng nhập họ và tên.',
+        'customer_email.required' => 'Vui lòng nhập email.',
+        'customer_email.email' => 'Địa chỉ email không hợp lệ.',
+        'customer_email.unique' => 'Email đã tồn tại.',
+        'customer_password.required' => 'Vui lòng nhập mật khẩu.',
+        'customer_phone.required' => 'Vui lòng nhập số điện thoại.',
+    ]);
 
-    // Lưu thông tin khách hàng và lấy ID của khách hàng vừa được thêm
-    $customer_id = DB::table('tbl_customers')->insertGetId($data);
+    // Lưu thông tin khách hàng
+    $data = [
+        'customer_name' => $request->customer_name,
+        'customer_phone' => $request->customer_phone,
+        'customer_email' => $request->customer_email,
+        'customer_password' => md5($request->customer_password),
+    ];
 
-    // Lưu ID và tên khách hàng vào Session
-    Session::put('customer_id', $customer_id);
-    Session::put('customer_name', $request->customer_name);
+    try {
+        $customer_id = DB::table('tbl_customers')->insertGetId($data);
 
-    // Chuyển hướng đến trang checkout
-    return Redirect::to('/checkout');
+        // Lưu vào session
+        Session::put('customer_id', $customer_id);
+        Session::put('customer_name', $request->customer_name);
+
+        // Trả về thông báo thành công
+        return redirect('/checkout')->with('success', 'Đăng ký thành công!');
+    } catch (\Exception $e) {
+        // Trả về thông báo lỗi
+        return redirect()->back()->with('error', 'Đăng ký thất bại. Vui lòng thử lại.');
+    }
 }
 
+
     public function checkout(){
-    $cate_product = DB::table('tbl_category_product')->where('category_status','0')->orderby('category_id', 'desc')->get();
+    $cate_product = DB::table('tbl_category_product')->where('category_status', '0')->orderby('category_id', 'desc')->get();
 
-    $brand_product = DB::table('tbl_brand')->where('brand_status','0')->orderby('brand_id', 'desc')->get();
+    $brand_product = DB::table('tbl_brand')->where('brand_status', '0')->orderby('brand_id', 'desc')->get();
 
-    $provider_product = DB::table('tbl_provider_product')->where('provider_status','0')->orderby('provider_id', 'desc')->get(); 
-        return view('pages.checkout.show_checkout')->with('category',$cate_product)->with('brand',$brand_product);
-    }
+    $provider_product = DB::table('tbl_provider_product')->where('provider_status', '0')->orderby('provider_id', 'desc')->get();
+
+    $payment_methods = DB::table('tbl_payment')->where('payment_status', '0')->get(); // Lấy danh sách phương thức thanh toán
+
+    return view('pages.checkout.show_checkout')
+        ->with('category', $cate_product)
+        ->with('brand', $brand_product)
+        ->with('payment_methods', $payment_methods); 
+}
+
     public function save_checkout_customer(Request $request)
     {
     $data = array();
@@ -200,7 +235,7 @@ class CheckoutController extends Controller
             Session::put('customer_id', $result->customer_id);
             return Redirect::to('/checkout');
         }else{
-            return Redirect::to('/login-checkout');
+            return Redirect::to('/login-checkout')->with('login_error', 'Sai tài khoản hoặc mật khẩu. Vui lòng thử lại.');
         }
     }
     public function manage_order() {
