@@ -185,48 +185,15 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                         
                     </ul>
                 </li>
-                <!-- <li class="sub-menu">
-                    <a href="javascript:;">
-                        <i class="fa fa-book"></i>
-                        <span>Quản lí khách hàng </span>
-                    </a>
-                    <ul class="sub">
-                        <li><a href="mail.html">Thêm khách hàng</a></li>
-                        <li><a href="mail_compose.html">Danh sách khách hàng</a></li>
-                    </ul>
-                </li>
-                <li class="sub-menu">
-                    <a href="javascript:;">
-                        <i class=" fa fa-book"></i>
-                        <span>Quản lý khuyến mãi</span>
-                    </a>
-                    <ul class="sub">
-                        <li><a href="google_map.html">Google Map</a></li>
-                        <li><a href="vector_map.html">Vector Map</a></li>
-                    </ul>
-                </li>
                 <li class="sub-menu">
                     <a href="javascript:;">
                         <i class="fa fa-book"></i>
-                        <span>Quản lý bảo hành</span>
+                        <span>Quản lý phân quyền</span>
                     </a>
                     <ul class="sub">
-                        <li><a href="gallery.html">Gallery</a></li>
-						<li><a href="404.html">404 Error</a></li>
-                        
+                        <li><a href="{{ url('/manage-admin') }}">Danh sách tài khoản</a></li>
                     </ul>
                 </li>
-                <li class="sub-menu">
-                    <a href="javascript:;">
-                        <i class="fa fa-book"></i>
-                        <span>Quản lý quảng cáo</span>
-                    </a>
-                    <ul class="sub">
-                        <li><a href="gallery.html">Gallery</a></li>
-                        <li><a href="404.html">404 Error</a></li>
-                        
-                    </ul>
-                </li> -->
             </ul>            
         </div>
         <!-- sidebar menu end-->

@@ -1,5 +1,12 @@
 @extends('admin_layout')
 @section('admin_content')
+<?php
+                    $message = Session::get('message');
+                    if($message){
+                        echo '<span style="color: red; font-weight: bold; padding: 10px; border-radius: 5px; width: 100%; ">', $message, '</span>';
+                        Session::put('message', null);
+                    }
+                    ?>
 <div class="container-fluid">
     <style type="text/css">
         p.title_thongke {
@@ -7,7 +14,7 @@
             font-size: 20px;
             font-weight: bold;
         }
-    </style>
+    </style>                 
     <div class="row">
         <p class="title_thongke">Thống kê đơn hàng, doanh số</p>
         <form autocomplete="off" id="filterForm">

@@ -37,6 +37,8 @@ Route::get('/admin-register', [AdminController::class, 'registerAdmin']);
 Route::get('/logout', [AdminController::class, 'logout']);
 Route::get('/print-statistics-report/{from_date}/{to_date}', [AdminController::class, 'printStatisticsReportByDate']);
 Route::get('/export-statistics-word/{from_date}/{to_date}', [AdminController::class, 'insertStatisticsToWord']);
+Route::post('/assign-role', [AdminController::class, 'assignRole'])->middleware('admin.role');
+Route::get('/manage-admin', [AdminController::class, 'manageAdmins']);
 
 //Category Product
 Route::get('/add-category-product', [CategoryProduct::class, 'add_category_product']);

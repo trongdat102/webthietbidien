@@ -48,7 +48,7 @@ class AdminController extends Controller
     return response()->json($chart_data); 
 }
 
-public function insertStatisticsToWord($from_date, $to_date)
+    public function insertStatisticsToWord($from_date, $to_date)
 {
     // Lấy dữ liệu thống kê từ database
     $statistics = Statistic::whereBetween('order_date', [$from_date, $to_date])
@@ -220,6 +220,7 @@ public function insertStatisticsToWord($from_date, $to_date)
         if($result){
             Session::put('admin_name',$result->admin_name);
             Session::put('admin_id',$result->admin_id);
+            Session::put('admin_role', $result->admin_role);
           return Redirect::to('/dashboard');
         }
         else {
@@ -238,30 +239,65 @@ public function insertStatisticsToWord($from_date, $to_date)
         return view('admin.add_admin');
     }
     public function add_admin(Request $request) {
-    // Lấy dữ liệu từ form
+
     $admin_name = $request->admin_name;
     $admin_email = $request->admin_email;
     $admin_password = md5($request->admin_password);
     $admin_phone = $request->admin_phone;
 
-    // Kiểm tra email có tồn tại chưa
+
     $existingAdmin = DB::table('tbl_admin')->where('admin_email', $admin_email)->first();
     if ($existingAdmin) {
-        // Email đã tồn tại
+
         Session::put('message', 'Email này đã được đăng ký. Vui lòng thử email khác.');
-        return Redirect::to('/admin-register'); // Trả về trang đăng ký
+        return Redirect::to('/admin-register'); 
     }
 
-    // Lưu tài khoản mới vào cơ sở dữ liệu
+
     DB::table('tbl_admin')->insert([
         'admin_name' => $admin_name,
         'admin_email' => $admin_email,
         'admin_password' => $admin_password,
-        'admin_phone' => $admin_phone
+        'admin_phone' => $admin_phone,
+        'admin_role' => 0
     ]);
 
-    // Đăng ký thành công
+
     Session::put('message', 'Đăng ký thành công. Bạn có thể đăng nhập.');
     return Redirect::to('/admin');
 }
+
+    public function assignRole(Request $request) {
+
+    if (Session::get('admin_role') != 1) {
+        Session::flash('message', 'Bạn không có quyền thay đổi quyền admin!');
+        return Redirect::to('/dashboard');
+    }
+
+    $admin_id = $request->admin_id;
+    $new_role = $request->admin_role;
+
+
+    DB::table('tbl_admin')->where('admin_id', $admin_id)->update(['admin_role' => $new_role]);
+
+    Session::flash('message', 'Cập nhật quyền thành công!');
+    return Redirect::to('/manage-admin');
+}
+
+    public function manageAdmins() {
+    if (Session::get('admin_role') != 1) {
+        return Redirect::to('/dashboard')->with('message', 'Không có quyền truy cập!');
+    }
+
+    $admins = DB::table('tbl_admin')->get();
+
+    return view('admin.manage_admin')->with('admins', $admins);
+}
+    public function handle($request, Closure $next) {
+    if (Session::get('admin_role') != 1) {
+        return Redirect::to('/dashboard');
+    }
+    return $next($request);
+}
+
 }

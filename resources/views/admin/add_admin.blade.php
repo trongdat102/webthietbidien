@@ -32,24 +32,19 @@
             <?php Session::put('message', null); ?>
         @endif
 
-        <form action="{{ url('/add-admin') }}" method="post">
-            @csrf
-            <label for="admin_name">Họ và tên:</label>
-            <input type="text" class="ggg" name="admin_name" id="admin_name" placeholder="Nhập tên" required>
+        <form action="{{ URL::to('/add-admin') }}" method="post">
+                {{ csrf_field() }}
+                <label for="admin_name">Tên:</label>
+                <input type="text" name="admin_name" required>
+                <label for="admin_email">Email:</label>
+                <input type="email" name="admin_email" required>
+                <label for="admin_password">Mật khẩu:</label>
+                <input type="password" name="admin_password" required>
+                <label for="admin_phone">Số điện thoại:</label>
+                <input type="text" name="admin_phone">
+                <button type="submit">Thêm</button>
+            </form>
 
-            <label for="admin_email">Email:</label>
-            <input type="email" class="ggg" name="admin_email" id="admin_email" placeholder="Nhập email" required>
-
-            <label for="admin_password">Mật khẩu:</label>
-            <input type="password" class="ggg" name="admin_password" id="admin_password" placeholder="Nhập mật khẩu" required>
-
-            <label for="admin_phone">Số điện thoại:</label>
-            <input type="text" class="ggg" name="admin_phone" id="admin_phone" placeholder="Nhập số điện thoại" required>
-
-            <div class="clearfix"></div>
-            <!-- <button type="submit" class="btn btn-default">Đăng ký</button> -->
-            <input type="submit" value="Đăng ký" name="register">
-        </form>
     </div>
 </div>
 
